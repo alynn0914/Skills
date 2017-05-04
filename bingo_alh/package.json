@@ -1,0 +1,19 @@
+{
+  "name": "Bingo",
+  "version": "1.0.0",
+  "description": "Bingo skill",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bingo",
+    "alexa",
+    "skill"
+  ],
+  "author": "Amanda",
+  "dependencies": {
+    "alexa-sdk": "^1.0.9",
+    "knuth-shuffle": "^1.0.1"
+  }
+}
