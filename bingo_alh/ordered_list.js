@@ -75,3 +75,4 @@ O74
 O75
 Free
 Free Space
+Star
