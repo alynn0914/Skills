@@ -4,6 +4,7 @@ var APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 
 var STATE_OF_GAME = {
     BINGO: "_BINGOMODE", // Bingo point
+    CHECKER: "_CHECKER", //Check Bingo
     START: "_STARTMODE", // Entry point, start the game.
     HELP: "_HELPMODE" // The user is asking for help.
 };
@@ -32,7 +33,7 @@ exports.handler = function(event, context, callback) {
     alexa.appId = APP_ID;
     // To enable string internationalization (i18n) features, set a resources object.
     alexa.resources = languageString;
-    alexa.registerHandlers(newSessionHandlers, startGameHandlers);
+    alexa.registerHandlers(newSessionHandlers, startGameHandlers, bingoGameHandlers, checkerGameHandlers);
     alexa.execute();
 };
 
@@ -42,25 +43,6 @@ var newSessionHandlers = {
         this.handler.state = STATE_OF_GAME.START;
         this.emitWithState("StartBingo", true);
     },
-    
-    //Amanda:
-    "BingoCallerIntent": function () {
-        this.handler.state = STATE_OF_GAME.BINGO;
-        this.emitWithState("CreateCall");
-    },
-    "BingoCheckerIntent": function () {
-        this.handler.state = STATE_OF_GAME.BINGO;
-        this.emitWithState("BingoChecker");
-    },
-    "AfterBingoIntent": function () {
-        this.handler.state = STATE_OF_GAME.BINGO;
-        this.emitWithState("AfterBingoChecker");
-    },
-    "KeepPlayingIntent": function () {
-        this.handler.state = STATE_OF_GAME.BINGO;
-        this.emitWithState("KeepPlaying");
-    },
-    //end Amanda
     
     "AMAZON.StartOverIntent": function() {
         this.handler.state = STATE_OF_GAME.START;
@@ -100,25 +82,18 @@ var startGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.START, {
 		this.handler.state = STATE_OF_GAME.BINGO;
 		
 		this.emit(":ask", speechOutput, repromptText);
-	},
-	"StartGameIntent": function() {
-	    this.handler.state = STATE_OF_GAME.START;
-	    this.emitWithState("StartBingo", false);
-	},
-	"AMAZON.StartOverIntent": function () {
-        this.handler.state = STATE_OF_GAME.START;
-        this.emitWithState("StartBingo", false);
-    },
-    "Unhandled": function () {
-        speechOutput = this.t("START_UNHANDLED");
-        this.emit(":ask", speechOutput, speechOutput);
-    }
+	}
 });
 
 //Amanda:
 
 var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
-	"CreateCall": function () { 
+	
+	/*
+	  	Intents : aka listeners
+	*/
+	//Creates the list of 5 bingo values and then calls the 5 values 
+	"BingoCallerIntent": function () { 
 		var a = [];
 		for (i=0;i<5;i++){
 			a[i] = shuffledList.queue.dequeue()
@@ -135,33 +110,49 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 			"shuffledList": shuffledList
 		});
 		
-		
-		
-		this.handler.state = STATE_OF_GAME.BINGO;
-    	this.emitWithState("BingoCaller");
-	},
-	"BingoCaller": function() {
-		speechOutput = "The next five values are" + 
-						values +
-						"Should I continue?"
+		var speechOutput = "The next five values are" + 
+							this.attribute["currentValues"] +
+							"Should I continue?"
 						
 		this.emit(":ask", speechOutput, speechOutput);
 						
 	},
-	"BingoChecker": function () {
+	
+	//Switches game state if BINGO is called
+	"BingoCheckerIntent": function () {
+		this.handler.state = STATE_OF_GAME.CHECKER;
+    	this.emitWithState("BingoCheckerIntent");
+	  
+	},
+	
+	
+	/*
+ 	Functions
+	 */ 
+	
+    "KeepPlaying": function () {
+        var speechOutput = "The last 5 called were " + 
+        					this.attribute["cuurentValues"]
+        					"Would you like the next values? Say next";
+		this.emit(":ask", speechOutput, speechOutput);
+    }
+});
+
+var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
+	"BingoCheckerIntent": function () {
         var correct = 0;
         var speechOutput;
         for (i=0;i<5;i++){
         	if (calledList.contains(slot[i])){
         		correct ++
         	}
-        };
+        }
         if (correct = 5){
         	winners ++ 
         	speechOutput = "Bingo! Anyone else have Bingo? Say Bingo or Continue."
         }else{
         	speechOutput = "Womp womp, no Bingo! Anyone else have Bingo? Say Bingo or Continue."
-        };
+        }
         
         Object.assign(this.attributes,{
 			"speechOutput" : repromptText,
@@ -175,7 +166,7 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 		this.emit(":ask", speechOutput, speechOutput);
         
     },
-    "AfterBingoChecker": function () {
+    "AfterCheckerIntent": function () {
     	var speechOutput = "";
         if(this.attribute["winners"] = 1){
         	speechOutput = "YAY! We have one very lucky winner! Would you like to play again? Say start over or play again."
@@ -189,32 +180,17 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
         
         
     },
-    "KeepPlaying": function () {
-        var speechOutput = "The last 5 called were " + 
-        					this.attribute["cuurentValues"]
-        					"Would you like to continue?";
-		this.emit(":ask", speechOutput, speechOutput);
+    "KeepPlayingIntent": function () {
+    	this.handler.state = STATE_OF_GAME.BINGO;
+    	this.emitWithState("KeepPlaying");
+    },
+    "AMAZON.StartOverIntent": function() {
+        this.handler.state = STATE_OF_GAME.START;
+        this.emitWithState("StartBingo", false);
     }
-});
+}
 
 //end Amanda
-
-
-
-
-
-//function Init() {
-//	
-//	var shuffled_list = [];
-//	var called_list = [];
-//	var winner = 0;
-//	
-//	shuffled_list = shuffle(ordered);
-//	
-//	Object.assign{
-//		
-//	}
-//}
 
 
 
