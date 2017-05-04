@@ -4,7 +4,10 @@ BingoCallerIntent Start
 BingoCallerIntent Next
  
 
-BingoCheckerIntent Bingo
+BingoCalledIntent Bingo
+
+BingoCheckerIntent My values are {BingoA} {BingoB} {BingoC} {BingoD} {BingoE}
+BingoCheckerIntent {BingoA} {BingoB} {BingoC} {BingoD} {BingoE}
 
 AfterBingoIntent Continue
 

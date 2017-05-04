@@ -1,0 +1,59 @@
+{
+  "intents": [
+    {
+      "intent": "StartGameIntent"
+    },
+    {
+      "intent": "BingoCallerIntent"
+    },
+    {
+      "intent": "BingoCalledIntent"
+    },
+    {
+      "intent": "BingoCheckerIntent",
+      "slots": [
+        {
+          "name": "BingoA",
+          "type": "BingoValues"
+        },
+        {
+          "name": "BingoB",
+          "type": "BingoValues"
+        },
+        {
+          "name": "BingoC",
+          "type": "BingoValues"
+        },
+        {
+          "name": "BingoD",
+          "type": "BingoValues"
+        },
+        {
+          "name": "BingoE",
+          "type": "BingoValues"
+        }
+      ]
+    },
+    {
+      "intent": "AfterBingoIntent"
+    },
+    {
+      "intent": "KeepPlayingIntent"
+    },
+    {
+      "intent": "AMAZON.StartOverIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}

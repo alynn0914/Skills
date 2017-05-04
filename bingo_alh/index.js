@@ -99,7 +99,7 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 			a[i] = shuffledList.queue.dequeue()
 			currentValues += a[i]+"<break time='5s'/>"
 			calledList.append(a[i])
-		};
+		}
 		
         Object.assign(this.attributes,{
 			"speechOutput" : repromptText,
@@ -119,10 +119,10 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 	},
 	
 	//Switches game state if BINGO is called
-	"BingoCheckerIntent": function () {
+	"BingoCalledIntent": function () {
 		this.handler.state = STATE_OF_GAME.CHECKER;
-    	this.emitWithState("BingoCheckerIntent");
-	  
+		var speechOutput = "We have a Bingo! Please tell me your 5 values. If you have a free space, please say Free Space";
+		this.emit(":ask", speechOutput, speechOutput);	  
 	},
 	
 	
@@ -142,16 +142,38 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
 	"BingoCheckerIntent": function () {
         var correct = 0;
         var speechOutput;
-        for (i=0;i<5;i++){
-        	if (calledList.contains(slot[i])){
-        		correct ++
-        	}
+//        for (i=0;i<5;i++){
+//        	if (calledList.contains(slot[i])){
+//        		correct ++
+//        	}
+//        }
+        
+        
+        //Check the five slots:
+        if (calledList.indexOf(this.event.request.intent.slots.BingoA) > -1){
+        	correct ++
         }
+        if (calledList.indexOf(this.event.request.intent.slots.BingoB) > -1{
+        	correct ++
+        }
+        if (calledList.indexOf(this.event.request.intent.slots.BingoC) > -1{
+        	correct ++
+        }
+        if (calledList.indexOf(this.event.request.intent.slots.BingoD) > -1{
+        	correct ++
+        }
+        if (calledList.indexOf(this.event.request.intent.slots.BingoE) > -1){
+        	correct ++
+        }
+
+        
+        
+        
         if (correct = 5){
         	winners ++ 
         	speechOutput = "Bingo! Anyone else have Bingo? Say Bingo or Continue."
         }else{
-        	speechOutput = "Womp womp, no Bingo! Anyone else have Bingo? Say Bingo or Continue."
+        	speechOutput = "Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue."
         }
         
         Object.assign(this.attributes,{
@@ -174,7 +196,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         	speechOutput = "Wahoo! We have " + this.attribute["winners"] + "winners! Would you like to play again? Say start over or play again."
         }else if (this.attribute["winners"] = 0){
         	speechOutput = "Sorry, it looks like we dont have a winner yet! Would you like to keep playing? Say keep playing."
-        };
+        }
 		
 		this.emit(":ask", speechOutput, speechOutput);
         
