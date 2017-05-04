@@ -9,7 +9,85 @@ var STATE_OF_GAME = {
     HELP: "_HELPMODE" // The user is asking for help.
 };
 
-var ordered = require("./ordered_list");
+//var ordered = require("./ordered_list");
+
+var ordered = [
+		'B1',
+		'B2',
+		'B3',
+		'B4',
+		'B5',
+		'B6',
+		'B7',
+		'B8',
+		'B9',
+		'B10',
+		'B11',
+		'B12',
+		'B13',
+		'B14',
+		'B15',
+		'I16',
+		'I17',
+		'I18',
+		'I19',
+		'I20',
+		'I21',
+		'I22',
+		'I23',
+		'I24',
+		'I25',
+		'I26',
+		'I27',
+		'I28',
+		'I29',
+		'I30',
+		'N31',
+		'N32',
+		'N33',
+		'N34',
+		'N35',
+		'N36',
+		'N37',
+		'N38',
+		'N39',
+		'N40',
+		'N41',
+		'N42',
+		'N43',
+		'N44',
+		'N45',
+		'G46',
+		'G47',
+		'G48',
+		'G49',
+		'G50',
+		'G51',
+		'G52',
+		'G53',
+		'G54',
+		'G55',
+		'G56',
+		'G57',
+		'G58',
+		'G59',
+		'G60',
+		'O61',
+		'O62',
+		'O63',
+		'O64',
+		'O65',
+		'O66',
+		'O67',
+		'O68',
+		'O69',
+		'O70',
+		'O71',
+		'O72',
+		'O73',
+		'O74',
+		'O75'
+	];
 
 
 var languageString = {
@@ -49,7 +127,7 @@ var newSessionHandlers = {
         this.emitWithState("StartBingo", false);
     },
     "AMAZON.HelpIntent": function() {
-        this.handler.state = GAME_STATES.HELP;
+        this.handler.state = STATE_OF_GAME.HELP;
         this.emitWithState("helpTheUser", true);
     },
     "Unhandled": function () {
@@ -62,6 +140,7 @@ var startGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.START, {
 	"StartBingo": function (newgame) { 
 		var speechOutput =  newgame ? this.t("NEWGAME", this.t("NAME")) + this.t("INSTRUCTIONS") + this.t("WELCOME") : this.t("ANOTHER_GAME_WELCOME");
 		var shuffledList = shuffle(ordered);
+		//var shuffledList = shuffle(ordered[OrderedList]);
 		var calledList = [];
 		var currentValues = "";
 		var winners = 0;
@@ -95,10 +174,19 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 	//Creates the list of 5 bingo values and then calls the 5 values 
 	"BingoCallerIntent": function () { 
 		var a = [];
+		var i;
+		var calledList = this.attributes.calledList;
+		var currentValues = "";
+		var repromptText = this.attributes.repromptText;
+		var winners = this.attributes.winners;
+		var shuffledList = this.attributes.shuffledList;
+		
 		for (i=0;i<5;i++){
-			a[i] = shuffledList.queue.dequeue()
-			currentValues += a[i]+"<break time='5s'/>"
-			calledList.append(a[i])
+//			a[i] = this.attributes.shuffledList.queue.dequeue();
+			a[i] = shuffledList.pop();
+//			currentValues += a[i]+"<break time='5s'/>"
+			currentValues += a[i]+". ";
+			calledList.push(a[i]);
 		}
 		
         Object.assign(this.attributes,{
@@ -111,8 +199,8 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 		});
 		
 		var speechOutput = "The next five values are" + 
-							this.attribute["currentValues"] +
-							"Should I continue?"
+							currentValues +
+							"Should I continue?";
 						
 		this.emit(":ask", speechOutput, speechOutput);
 						
@@ -132,7 +220,7 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 	
     "KeepPlaying": function () {
         var speechOutput = "The last 5 called were " + 
-        					this.attribute["cuurentValues"]
+        					this.attribute.currentValues +
         					"Would you like the next values? Say next";
 		this.emit(":ask", speechOutput, speechOutput);
     }
@@ -142,6 +230,14 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
 	"BingoCheckerIntent": function () {
         var correct = 0;
         var speechOutput;
+        
+        var calledList = this.attributes.calledList;
+		var currentValues = this.attributes.currentValues;
+		var repromptText = this.attributes.repromptText;
+		var winners = this.attributes.winners;
+		var shuffledList = this.attributes.shuffledList;
+        
+        
 //        for (i=0;i<5;i++){
 //        	if (calledList.contains(slot[i])){
 //        		correct ++
@@ -150,30 +246,30 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         
         
         //Check the five slots:
-        if (calledList.indexOf(this.event.request.intent.slots.BingoA) > -1){
-        	correct ++
+        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoA) > -1){
+        	correct ++;
         }
-        if (calledList.indexOf(this.event.request.intent.slots.BingoB) > -1{
-        	correct ++
+        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoB) > -1){
+        	correct ++;
         }
-        if (calledList.indexOf(this.event.request.intent.slots.BingoC) > -1{
-        	correct ++
+        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoC) > -1){
+        	correct ++;
         }
-        if (calledList.indexOf(this.event.request.intent.slots.BingoD) > -1{
-        	correct ++
+        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoD) > -1){
+        	correct ++;
         }
-        if (calledList.indexOf(this.event.request.intent.slots.BingoE) > -1){
-        	correct ++
+        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoE) > -1){
+        	correct ++;
         }
 
         
         
         
-        if (correct = 5){
-        	winners ++ 
-        	speechOutput = "Bingo! Anyone else have Bingo? Say Bingo or Continue."
+        if (correct == 5){
+        	this.attributes.winners ++; 
+        	speechOutput = "Bingo! Anyone else have Bingo? Say Bingo or Continue.";
         }else{
-        	speechOutput = "Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue."
+        	speechOutput = "Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue.";
         }
         
         Object.assign(this.attributes,{
@@ -190,12 +286,12 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
     },
     "AfterCheckerIntent": function () {
     	var speechOutput = "";
-        if(this.attribute["winners"] = 1){
-        	speechOutput = "YAY! We have one very lucky winner! Would you like to play again? Say start over or play again."
-        }else if (this.attribute["winners"] > 1){
-        	speechOutput = "Wahoo! We have " + this.attribute["winners"] + "winners! Would you like to play again? Say start over or play again."
-        }else if (this.attribute["winners"] = 0){
-        	speechOutput = "Sorry, it looks like we dont have a winner yet! Would you like to keep playing? Say keep playing."
+        if(this.attribute.winners == 1){
+        	speechOutput = "YAY! We have one very lucky winner! Would you like to play again? Say start over or play again.";
+        }else if (this.attribute.winners > 1){
+        	speechOutput = "Wahoo! We have " + this.attribute.winners + "winners! Would you like to play again? Say start over or play again.";
+        }else if (this.attribute.winners === 0){
+        	speechOutput = "Sorry, it looks like we dont have a winner yet! Would you like to keep playing? Say keep playing.";
         }
 		
 		this.emit(":ask", speechOutput, speechOutput);
@@ -210,7 +306,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         this.handler.state = STATE_OF_GAME.START;
         this.emitWithState("StartBingo", false);
     }
-}
+});
 
 //end Amanda
 
