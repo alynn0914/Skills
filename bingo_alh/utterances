@@ -1,0 +1,11 @@
+StartGameIntent Lets Begin
+StartGameIntent Lets Start
+StartGameIntent Start
+
+BingoCallerIntent Next
+
+BingoCheckerIntent Bingo
+
+KeepPlayingIntent Continue
+
+AMAZON.StartOverIntent restart

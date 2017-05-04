@@ -10,7 +10,6 @@ var STATE_OF_GAME = {
 
 var ordered = require("./ordered_list");
 
-//testing something minor
 
 var languageString = {
 	"en": {

@@ -1,0 +1,38 @@
+{
+  "intents": [
+    {
+      "intent": "StartGameIntent"
+    },
+    
+ 
+    {
+      "intent": "BingoCallerIntent"
+    },
+    {
+      "intent": "BingoCheckerIntent"
+    },
+        {
+      "intent": "AfterBingoIntent"
+    },
+    {
+      "intent": "KeepPlayingIntent"
+    },
+    
+    
+    {
+      "intent": "AMAZON.StartOverIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}
