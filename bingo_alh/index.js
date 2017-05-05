@@ -229,46 +229,65 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
 	"BingoCheckerIntent": function () {
         var correct = 0;
-        var speechOutput;
+        var i = 0;
+        var speechOutput = "";
+        var arr = [];
         
         var calledList = this.attributes.calledList;
 		var currentValues = this.attributes.currentValues;
 		var repromptText = this.attributes.repromptText;
 		var winners = this.attributes.winners;
 		var shuffledList = this.attributes.shuffledList;
-		
-		
         
-        //Check the five slots:
-        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoA) > -1){
-        	correct ++;
+//        arr[0] = this.event.request.intent.slots.BingoA.value;
+//        arr[1] = this.event.request.intent.slots.BingoB.value;
+//        arr[2] = this.event.request.intent.slots.BingoC.value;
+//        arr[3] = this.event.request.intent.slots.BingoD.value;
+//        arr[4] = this.event.request.intent.slots.BingoE.value;
+        
+        
+        if (this.event.request.intent.slots.BingoA.value !== ""){
+        	arr = this.event.request.intent.slots.BingoA.value.split(" ");
         }
-        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoB) > -1){
-        	correct ++;
+        
+        for(i=0;i<arr.length;i++){
+        	if(this.attributes.calledList.indexOf(arr[i]) > -1){
+        		correct+=1;
+        	}
         }
-        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoC) > -1){
-        	correct ++;
-        }
-        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoD) > -1){
-        	correct ++;
-        }
-        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoE) > -1){
-        	correct ++;
-        }
+//		
+//        
+//        //Check the five slots:
+//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoA) > -1){
+//        	correct ++;
+//        }
+//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoB) > -1){
+//        	correct ++;
+//        }
+//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoC) > -1){
+//        	correct ++;
+//        }
+//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoD) > -1){
+//        	correct ++;
+//        }
+//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoE) > -1){
+//        	correct ++;
+//        }
 
         
         
         
         if (correct === 5){
         	this.attributes.winners ++; 
-        	speechOutput = "Bingo! Anyone else have Bingo? Say Bingo or Continue.";
+        	speechOutput = " Bingo! Anyone else have Bingo? Say Bingo or Continue.";
         }else{
-        	speechOutput = "Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue.";
+        	speechOutput = " Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue.";
         }
         
+        
         Object.assign(this.attributes,{
-			"speechOutput" : repromptText,
-			"repromptText" : repromptText,
+			"speechOutput" : speechOutput,
+			"repromptText" : speechOutput,
 			"winners" : winners,
 			"currentValues" : currentValues,
 			"calledList": calledList,
@@ -280,7 +299,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
     },
     "AfterCheckerIntent": function () {
     	var speechOutput = "";
-        if(this.attribute.winners === 1){
+        if(this.attribute.winners == 1){
         	speechOutput = "YAY! We have one very lucky winner! Would you like to play again? Say start over or play again.";
         }else if (this.attribute.winners > 1){
         	speechOutput = "Wahoo! We have " + this.attribute.winners + "winners! Would you like to play again? Say start over or play again.";
