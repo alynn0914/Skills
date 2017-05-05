@@ -184,8 +184,8 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 		for (i=0;i<5;i++){
 //			a[i] = this.attributes.shuffledList.queue.dequeue();
 			a[i] = shuffledList.pop();
-//			currentValues += a[i]+"<break time='5s'/>"
-			currentValues += a[i]+". ";
+			currentValues += a[i]+"<break time='2s'/>";
+//			currentValues += a[i]+". ";
 			calledList.push(a[i]);
 		}
 		
@@ -198,7 +198,7 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 			"shuffledList": shuffledList
 		});
 		
-		var speechOutput = "The next five values are" + 
+		var speechOutput = "The next five values are <break time='2s'/>" + 
 							currentValues +
 							"Should I continue?";
 						
@@ -219,7 +219,7 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 	 */ 
 	
     "KeepPlaying": function () {
-        var speechOutput = "The last 5 called were " + 
+        var speechOutput = "The last 5 called were <break time='2s'/>" + 
         					this.attribute.currentValues +
         					"Would you like the next values? Say next";
 		this.emit(":ask", speechOutput, speechOutput);
@@ -236,14 +236,8 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
 		var repromptText = this.attributes.repromptText;
 		var winners = this.attributes.winners;
 		var shuffledList = this.attributes.shuffledList;
-        
-        
-//        for (i=0;i<5;i++){
-//        	if (calledList.contains(slot[i])){
-//        		correct ++
-//        	}
-//        }
-        
+		
+		
         
         //Check the five slots:
         if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoA) > -1){
@@ -265,7 +259,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         
         
         
-        if (correct == 5){
+        if (correct === 5){
         	this.attributes.winners ++; 
         	speechOutput = "Bingo! Anyone else have Bingo? Say Bingo or Continue.";
         }else{
@@ -286,7 +280,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
     },
     "AfterCheckerIntent": function () {
     	var speechOutput = "";
-        if(this.attribute.winners == 1){
+        if(this.attribute.winners === 1){
         	speechOutput = "YAY! We have one very lucky winner! Would you like to play again? Say start over or play again.";
         }else if (this.attribute.winners > 1){
         	speechOutput = "Wahoo! We have " + this.attribute.winners + "winners! Would you like to play again? Say start over or play again.";
