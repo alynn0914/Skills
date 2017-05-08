@@ -292,9 +292,12 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         
     },
     "AfterCheckerIntent": function () {
+		
     	var speechOutput = "";
+		var winners = this.attributes.winners;
+		
         if(winners === 1){
-        	speechOutput = "YAY! We have one very lucky winner! Would you like to play again? Say start over or play again.";
+        	speechOutput = "YAY! We have one very lucky winner! Would 	you like to play again? Say start over or play again.";
         }else if (winners > 1){
         	speechOutput = "Wahoo! We have " + winners + "winners! Would you like to play again? Say start over or play again.";
         }else if (winners === 0){
