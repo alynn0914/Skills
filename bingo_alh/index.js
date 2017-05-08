@@ -142,7 +142,7 @@ var startGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.START, {
 		var speechOutput =  newgame ? this.t("NEWGAME", this.t("NAME")) + this.t("INSTRUCTIONS") + this.t("WELCOME") : this.t("ANOTHER_GAME_WELCOME");
 		var shuffledList = shuffle(ordered);
 //		var shuffledList = shuffle(ordered[OrderedList]);
-		var calledList = [];
+		var calledList = ["FREE"];
 		var currentValues = "";
 		var winners = 0;
 		var repromptText = this.t("WELCOME");
@@ -222,7 +222,7 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 	
     "KeepPlaying": function () {
         var speechOutput = "The last 5 called were <break time='2s'/>" + 
-        					this.attribute.currentValues +
+        					this.attributes.currentValues +
         					"Would you like the next values? Say next";
 		this.emit(":ask", speechOutput, speechOutput);
     },
@@ -233,6 +233,14 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 });
 
 var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
+	
+	//After the first bingo is called
+	"BingoCalledIntent": function () {
+		this.handler.state = STATE_OF_GAME.CHECKER;
+		var speechOutput = "We have another Bingo! Please tell me your 5 values. If you have a free space, please say Free Space";
+		this.emit(":ask", speechOutput, speechOutput);	  
+	},
+	
 	"BingoCheckerIntent": function () {
         var correct = 0;
         var i = 0;
@@ -240,22 +248,15 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         var arr = [];
         
         var calledList = this.attributes.calledList;
-		var currentValues = this.attributes.currentValues;
-		var repromptText = this.attributes.repromptText;
-		var winners = this.attributes.winners;
-		var shuffledList = this.attributes.shuffledList;
-        
-//        arr[0] = this.event.request.intent.slots.BingoA.value;
-//        arr[1] = this.event.request.intent.slots.BingoB.value;
-//        arr[2] = this.event.request.intent.slots.BingoC.value;
-//        arr[3] = this.event.request.intent.slots.BingoD.value;
-//        arr[4] = this.event.request.intent.slots.BingoE.value;
-        
+	var currentValues = this.attributes.currentValues;
+	var repromptText = this.attributes.repromptText;
+	var winners = this.attributes.winners;
+	var shuffledList = this.attributes.shuffledList;
         
         if (this.event.request.intent.slots.BingoA.value !== ""){
         	arr = this.event.request.intent.slots.BingoA.value.split(" ");
         	for(i=0;i<arr.length;i++){
-            	if(this.attributes.calledList.indexOf(arr[i]) > -1){
+            	if(calledList.indexOf(arr[i].toUpperCase()) > -1){
             		correct+=1;
             	}
             }
@@ -265,7 +266,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
             
             
             if (correct === 5){
-            	this.attributes.winners ++; 
+            	winners ++; 
             	speechOutput = " Bingo! Anyone else have Bingo? Say Bingo or Continue.";
             }else if (correct < 5){
             	speechOutput = " Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue.";
@@ -292,11 +293,11 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
     },
     "AfterCheckerIntent": function () {
     	var speechOutput = "";
-        if(this.attribute.winners == 1){
+        if(winners === 1){
         	speechOutput = "YAY! We have one very lucky winner! Would you like to play again? Say start over or play again.";
-        }else if (this.attribute.winners > 1){
-        	speechOutput = "Wahoo! We have " + this.attribute.winners + "winners! Would you like to play again? Say start over or play again.";
-        }else if (this.attribute.winners === 0){
+        }else if (winners > 1){
+        	speechOutput = "Wahoo! We have " + winners + "winners! Would you like to play again? Say start over or play again.";
+        }else if (winners === 0){
         	speechOutput = "Sorry, it looks like we dont have a winner yet! Would you like to keep playing? Say keep playing.";
         }
 		
