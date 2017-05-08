@@ -9,85 +9,85 @@ var STATE_OF_GAME = {
     HELP: "_HELPMODE" // The user is asking for help.
 };
 
-//var ordered = require("./ordered_list");
+var ordered = require("./ordered_list");
 
-var ordered = [
-		'B1',
-		'B2',
-		'B3',
-		'B4',
-		'B5',
-		'B6',
-		'B7',
-		'B8',
-		'B9',
-		'B10',
-		'B11',
-		'B12',
-		'B13',
-		'B14',
-		'B15',
-		'I16',
-		'I17',
-		'I18',
-		'I19',
-		'I20',
-		'I21',
-		'I22',
-		'I23',
-		'I24',
-		'I25',
-		'I26',
-		'I27',
-		'I28',
-		'I29',
-		'I30',
-		'N31',
-		'N32',
-		'N33',
-		'N34',
-		'N35',
-		'N36',
-		'N37',
-		'N38',
-		'N39',
-		'N40',
-		'N41',
-		'N42',
-		'N43',
-		'N44',
-		'N45',
-		'G46',
-		'G47',
-		'G48',
-		'G49',
-		'G50',
-		'G51',
-		'G52',
-		'G53',
-		'G54',
-		'G55',
-		'G56',
-		'G57',
-		'G58',
-		'G59',
-		'G60',
-		'O61',
-		'O62',
-		'O63',
-		'O64',
-		'O65',
-		'O66',
-		'O67',
-		'O68',
-		'O69',
-		'O70',
-		'O71',
-		'O72',
-		'O73',
-		'O74',
-		'O75'
-	];
+//var ordered = [
+//		'B1',
+//		'B2',
+//		'B3',
+//		'B4',
+//		'B5',
+//		'B6',
+//		'B7',
+//		'B8',
+//		'B9',
+//		'B10',
+//		'B11',
+//		'B12',
+//		'B13',
+//		'B14',
+//		'B15',
+//		'I16',
+//		'I17',
+//		'I18',
+//		'I19',
+//		'I20',
+//		'I21',
+//		'I22',
+//		'I23',
+//		'I24',
+//		'I25',
+//		'I26',
+//		'I27',
+//		'I28',
+//		'I29',
+//		'I30',
+//		'N31',
+//		'N32',
+//		'N33',
+//		'N34',
+//		'N35',
+//		'N36',
+//		'N37',
+//		'N38',
+//		'N39',
+//		'N40',
+//		'N41',
+//		'N42',
+//		'N43',
+//		'N44',
+//		'N45',
+//		'G46',
+//		'G47',
+//		'G48',
+//		'G49',
+//		'G50',
+//		'G51',
+//		'G52',
+//		'G53',
+//		'G54',
+//		'G55',
+//		'G56',
+//		'G57',
+//		'G58',
+//		'G59',
+//		'G60',
+//		'O61',
+//		'O62',
+//		'O63',
+//		'O64',
+//		'O65',
+//		'O66',
+//		'O67',
+//		'O68',
+//		'O69',
+//		'O70',
+//		'O71',
+//		'O72',
+//		'O73',
+//		'O74',
+//		'O75'
+//	];
 
 
 var languageString = {
@@ -99,8 +99,9 @@ var languageString = {
 	    	   				'If you do not catch a value, say repeat when I complete the round and I will repeat the most recent five values. ' +
 	    					'If you have a Bingo, you may call it out at any time by saying Alexa, bingo. ',
 	    	"WELCOME": 'Lets begin!',
-	    	"ANOTHER_GAME_WELCOME":'Ready for the next round? Here we go!',
-	        "START_UNHANDLED": 'Say start to start a new game.'
+	    	"ANOTHER_GAME_WELCOME":'Ready for the next round? Say start!',
+	        "START_UNHANDLED": 'Say start to start a new game.',
+	        "UNHANDLED": 'Hm, I"m not sure what you meant there.'
 	     }
 	 }
 };
@@ -140,7 +141,7 @@ var startGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.START, {
 	"StartBingo": function (newgame) { 
 		var speechOutput =  newgame ? this.t("NEWGAME", this.t("NAME")) + this.t("INSTRUCTIONS") + this.t("WELCOME") : this.t("ANOTHER_GAME_WELCOME");
 		var shuffledList = shuffle(ordered);
-		//var shuffledList = shuffle(ordered[OrderedList]);
+//		var shuffledList = shuffle(ordered[OrderedList]);
 		var calledList = [];
 		var currentValues = "";
 		var winners = 0;
@@ -161,7 +162,7 @@ var startGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.START, {
 		this.handler.state = STATE_OF_GAME.BINGO;
 		
 		this.emit(":ask", speechOutput, repromptText);
-	}
+	}	
 });
 
 //Amanda:
@@ -188,20 +189,21 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 //			currentValues += a[i]+". ";
 			calledList.push(a[i]);
 		}
-		
-        Object.assign(this.attributes,{
-			"speechOutput" : repromptText,
-			"repromptText" : repromptText,
-			"winners" : winners,
-			"currentValues" : currentValues,
-			"calledList": calledList,
-			"shuffledList": shuffledList
-		});
+
 		
 		var speechOutput = "The next five values are <break time='2s'/>" + 
 							currentValues +
 							"Should I continue?";
 						
+        Object.assign(this.attributes,{
+			"speechOutput" : speechOutput,
+			"repromptText" : speechOutput,
+			"winners" : winners,
+			"currentValues" : currentValues,
+			"calledList": calledList,
+			"shuffledList": shuffledList
+		});
+
 		this.emit(":ask", speechOutput, speechOutput);
 						
 	},
@@ -209,7 +211,7 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 	//Switches game state if BINGO is called
 	"BingoCalledIntent": function () {
 		this.handler.state = STATE_OF_GAME.CHECKER;
-		var speechOutput = "We have a Bingo! Please tell me your 5 values. If you have a free space, please say Free Space";
+		var speechOutput = "We have a Bingo! Please tell me your 5 values. If you have a free space, please say Free";
 		this.emit(":ask", speechOutput, speechOutput);	  
 	},
 	
@@ -223,6 +225,10 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
         					this.attribute.currentValues +
         					"Would you like the next values? Say next";
 		this.emit(":ask", speechOutput, speechOutput);
+    },
+    "Unhandled": function () {
+        var speechOutput = this.t("UNHANDLED");
+        this.emit(":ask", speechOutput, speechOutput);
     }
 });
 
@@ -248,43 +254,30 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         
         if (this.event.request.intent.slots.BingoA.value !== ""){
         	arr = this.event.request.intent.slots.BingoA.value.split(" ");
-        }
-        
-        for(i=0;i<arr.length;i++){
-        	if(this.attributes.calledList.indexOf(arr[i]) > -1){
-        		correct+=1;
-        	}
-        }
-//		
-//        
-//        //Check the five slots:
-//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoA) > -1){
-//        	correct ++;
-//        }
-//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoB) > -1){
-//        	correct ++;
-//        }
-//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoC) > -1){
-//        	correct ++;
-//        }
-//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoD) > -1){
-//        	correct ++;
-//        }
-//        if (this.attributes.calledList.indexOf(this.event.request.intent.slots.BingoE) > -1){
-//        	correct ++;
-//        }
+        	for(i=0;i<arr.length;i++){
+            	if(this.attributes.calledList.indexOf(arr[i]) > -1){
+            		correct+=1;
+            	}
+            }
 
-        
-        
-        
-        if (correct === 5){
-        	this.attributes.winners ++; 
-        	speechOutput = " Bingo! Anyone else have Bingo? Say Bingo or Continue.";
+
+            
+            
+            
+            if (correct === 5){
+            	this.attributes.winners ++; 
+            	speechOutput = " Bingo! Anyone else have Bingo? Say Bingo or Continue.";
+            }else if (correct < 5){
+            	speechOutput = " Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue.";
+            }else if (correct > 5){
+            	speechOutput = "I'm sorry. You gave me too many values. Say Bingo to try again, or Continue to continue the game.";
+            }else{
+            	speechOutput = "I dont think I know how to count. Lets try that again. Say Bingo to try again or continue to continue the game";
+            }
         }else{
-        	speechOutput = " Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue.";
+        	speechOutput = "I'm sorry. I didn't catch that. Did you have Bingo? Say Bingo or Continue.";
         }
-        
-        
+              
         Object.assign(this.attributes,{
 			"speechOutput" : speechOutput,
 			"repromptText" : speechOutput,
