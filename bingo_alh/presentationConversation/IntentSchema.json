@@ -1,0 +1,29 @@
+{
+  "intents": [
+    {
+      "intent": "WelcomeInterns"
+    },
+    {
+      "intent": "Bummed"
+    },
+    {
+      "intent": "Introduce"
+    },
+    {
+      "intent": "Encore"
+    },
+    {
+      "intent": "JobHunt"
+    }, 
+    
+    {
+      "intent": "AMAZON.StartOverIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}
