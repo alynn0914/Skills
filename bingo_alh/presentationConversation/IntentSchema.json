@@ -15,6 +15,9 @@
     {
       "intent": "JobHunt"
     }, 
+    {
+      "intent": "Seriously"
+    }, 
     
     {
       "intent": "AMAZON.StartOverIntent"
