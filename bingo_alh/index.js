@@ -269,7 +269,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
     			break; 
     		}
     		
-        	if(calledList.indexOf(getBingoPiece(bingoValue) > -1){
+        	if(calledList.indexOf(getBingoPiece(bingoValue)) > -1){
         		correct++;
         	}
         }
@@ -349,7 +349,7 @@ function shuffle(array) {
 	  }
 
 	  return array;
-}
+};
 
 /*function isNumeric(n) {
 	// not needed anymore
@@ -372,5 +372,5 @@ function getBingoPiece(num){
 	} else {
 		return 'INVALID'; 
 	}
-}
+}; 
 
