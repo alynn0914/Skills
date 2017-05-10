@@ -256,8 +256,8 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         if (this.event.request.intent.slots.BingoA.value !== ""){
         	arr = this.event.request.intent.slots.BingoA.value.split(" ");
         	for(i=0;i<arr.length;i++){
-            	if(calledList.indexOf(arr[i].toUpperCase()) > -1){
-            		correct+=1;
+            	if(calledList.indexOf(getBingoPieceFromNumber(arr[i])) > -1){
+            		correct++;
             	}
             }
 
@@ -342,3 +342,26 @@ function shuffle(array) {
 
 	  return array;
 }
+
+function isNumeric(n) {
+	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function getBingoPieceFromNumber(num){
+	if (!isNumeric(num)) return "Free"; 
+	
+	if (num > 0 && num <= 15){
+		return 'B'+num;
+	} else if (num > 15 && num <= 30){
+		return 'I'+num; 
+	} else if (num > 30 && num <= 45){
+		return 'N'+num; 
+	} else if (num > 45 && num <= 60){
+		return 'G'+num; 
+	} else if (num > 60 && num <= 75){
+		return 'O'+num; 
+	} else {
+		return 'INVALID'; 
+	}
+}
+
