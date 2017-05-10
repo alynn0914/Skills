@@ -261,7 +261,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
 		var bingoWinnerArr = [];
 		
 		
-		var notEnoughValues = false;
+		var flag = false;
 		
     	for(i=0;i<bingoValuesArr.length;i++) {
     	
@@ -270,7 +270,8 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
     		var bingoValue = bingoValuesArr[i].toUpperCase() === "STAR" ? 0 : WtoN.convert(bingoValuesArr[i]);
     		
     		if (bingoValue == null || bingoValue === '') {
-    			notEnoughValues = true; 
+    			flag = true; 
+    			speechOutput = "I dont think I know how to count. Lets try that again. Say Bingo to try again or continue to continue the game";
     			break; 
     		}
     		
@@ -281,15 +282,13 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
     			}
     		} else {
     			speechOutput = "Hey no cheating!  Either say Bingo to try again, or continue to continue the game.";
-    			notEnoughValues = true;
+    			flag = true;
     			break;
     		}
     		
         }
     	
-    	if (notEnoughValues){
-    		speechOutput = "I dont think I know how to count. Lets try that again. Say Bingo to try again or continue to continue the game";
-    	}else {
+    	if (!flag) {
     		if (correct === 5){
             	winners ++; 
             	speechOutput = " Bingo! Anyone else have Bingo? Say Bingo or Continue.";
