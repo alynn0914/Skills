@@ -262,7 +262,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
 		var notEnoughValues = false;
     	for(i=0;i<bingoValuesArr.length;i++){
     		if (bingoValuesArr[i] == null) continue; 
-    		var bingoValue = bingoValuesArr[i].toUppercase() === "STAR" ? 0 : WtoN.convert(bingoValuesArr[i]);
+    		var bingoValue = bingoValuesArr[i].toUpperCase() === "STAR" ? 0 : WtoN.convert(bingoValuesArr[i]);
     		
     		if (bingoValue == null || bingoValue === ''){
     			notEnoughValues = true; 
