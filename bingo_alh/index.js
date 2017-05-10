@@ -248,37 +248,41 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         var arr = [];
         
         var calledList = this.attributes.calledList;
-	var currentValues = this.attributes.currentValues;
-	var repromptText = this.attributes.repromptText;
-	var winners = this.attributes.winners;
-	var shuffledList = this.attributes.shuffledList;
-        
-        if (this.event.request.intent.slots.BingoA.value !== ""){
-        	arr = this.event.request.intent.slots.BingoA.value.split(" ");
-        	for(i=0;i<arr.length;i++){
-            	if(calledList.indexOf(getBingoPieceFromNumber(arr[i])) > -1){
-            		correct++;
-            	}
-            }
+		var currentValues = this.attributes.currentValues;
+		var repromptText = this.attributes.repromptText;
+		var winners = this.attributes.winners;
+		var shuffledList = this.attributes.shuffledList;
+		
+		var bingoValuesArr = [this.event.request.intent.slots.BingoA.value, this.event.request.intent.slots.BingoB.value,
+		                      this.event.request.intent.slots.BingoC.value, this.event.request.intent.slots.BingoD.value,
+		                      this.event.request.intent.slots.BingoE.value];
 
-
-            
-            
-            
-            if (correct === 5){
+       
+		var notEnoughValues = false;
+    	for(i=0;i<bingoValuesArr.length;i++){
+    		if (bingoValuesArr[i] == null || bingoValuesArr[i] === ''){
+    			notEnoughValues = true; 
+    			break; 
+    		}
+    		
+        	if(calledList.indexOf(getBingoPieceFromNumber(bingoValuesArr[i])) > -1){
+        		correct++;
+        	}
+        }
+    	
+    	if (notEnoughValues){
+    		speechOutput = "I dont think I know how to count. Lets try that again. Say Bingo to try again or continue to continue the game";
+    	}else {
+    		if (correct === 5){
             	winners ++; 
             	speechOutput = " Bingo! Anyone else have Bingo? Say Bingo or Continue.";
             }else if (correct < 5){
             	speechOutput = " Womp womp, no Bingo! You had " + correct + " correct. Anyone else have Bingo? Say Bingo or Continue.";
             }else if (correct > 5){
             	speechOutput = "I'm sorry. You gave me too many values. Say Bingo to try again, or Continue to continue the game.";
-            }else{
-            	speechOutput = "I dont think I know how to count. Lets try that again. Say Bingo to try again or continue to continue the game";
             }
-        }else{
-        	speechOutput = "I'm sorry. I didn't catch that. Did you have Bingo? Say Bingo or Continue.";
-        }
-              
+    	}
+      
         Object.assign(this.attributes,{
 			"speechOutput" : speechOutput,
 			"repromptText" : speechOutput,
