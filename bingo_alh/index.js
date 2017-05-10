@@ -1,5 +1,7 @@
 'use strict';
 var Alexa = require("alexa-sdk");
+var WtoN = require('words-to-num');
+
 var APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 
 var STATE_OF_GAME = {
@@ -245,7 +247,6 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
         var correct = 0;
         var i = 0;
         var speechOutput = "";
-        var arr = [];
         
         var calledList = this.attributes.calledList;
 		var currentValues = this.attributes.currentValues;
@@ -260,12 +261,14 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
        
 		var notEnoughValues = false;
     	for(i=0;i<bingoValuesArr.length;i++){
-    		if (bingoValuesArr[i] == null || bingoValuesArr[i] === ''){
+    		var bingoValue = bingoValuesArr[i] === "star" ? 0 : WtoN.convert(bingoValuesArr[i]);
+    		
+    		if (bingoValue == null || bingoValue === ''){
     			notEnoughValues = true; 
     			break; 
     		}
     		
-        	if(calledList.indexOf(getBingoPieceFromNumber(bingoValuesArr[i])) > -1){
+        	if(calledList.indexOf(getBingoPiece(bingoValue) > -1){
         		correct++;
         	}
         }
@@ -347,14 +350,15 @@ function shuffle(array) {
 	  return array;
 }
 
-function isNumeric(n) {
+/*function isNumeric(n) {
+	// not needed anymore
 	return !isNaN(parseFloat(n)) && isFinite(n);
-}
+}*/
 
-function getBingoPieceFromNumber(num){
-	if (!isNumeric(num)) return "Free"; 
-	
-	if (num > 0 && num <= 15){
+function getBingoPiece(num){
+	if (num == 0) {
+		return "FREE";
+	} else if (num > 0 && num <= 15){
 		return 'B'+num;
 	} else if (num > 15 && num <= 30){
 		return 'I'+num; 
