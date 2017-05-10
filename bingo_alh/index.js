@@ -213,7 +213,7 @@ var bingoGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.BINGO, {
 	//Switches game state if BINGO is called
 	"BingoCalledIntent": function () {
 		this.handler.state = STATE_OF_GAME.CHECKER;
-		var speechOutput = "We have a Bingo! Please tell me your 5 values. If you have a free space, please say Free";
+		var speechOutput = "We have a Bingo! Please tell me your 5 values. If you have a free space, please say Star";
 		this.emit(":ask", speechOutput, speechOutput);	  
 	},
 	
@@ -239,7 +239,7 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
 	//After the first bingo is called
 	"BingoCalledIntent": function () {
 		this.handler.state = STATE_OF_GAME.CHECKER;
-		var speechOutput = "We have another Bingo! Please tell me your 5 values. If you have a free space, please say Free Space";
+		var speechOutput = "We have another Bingo! Please tell me your 5 values. If you have a free space, please say Star";
 		this.emit(":ask", speechOutput, speechOutput);	  
 	},
 	
@@ -258,20 +258,33 @@ var checkerGameHandlers = Alexa.CreateStateHandler(STATE_OF_GAME.CHECKER, {
 		                      this.event.request.intent.slots.BingoC.value, this.event.request.intent.slots.BingoD.value,
 		                      this.event.request.intent.slots.BingoE.value];
 
-       
+		var bingoWinnerArr = [];
+		
+		
 		var notEnoughValues = false;
-    	for(i=0;i<bingoValuesArr.length;i++){
-    		if (bingoValuesArr[i] == null) continue; 
+		
+    	for(i=0;i<bingoValuesArr.length;i++) {
+    	
+    	    if (bingoValuesArr[i] == null) continue; 
+    	    
     		var bingoValue = bingoValuesArr[i].toUpperCase() === "STAR" ? 0 : WtoN.convert(bingoValuesArr[i]);
     		
-    		if (bingoValue == null || bingoValue === ''){
+    		if (bingoValue == null || bingoValue === '') {
     			notEnoughValues = true; 
     			break; 
     		}
     		
-        	if(calledList.indexOf(getBingoPiece(bingoValue)) > -1){
-        		correct++;
-        	}
+    		if (bingoWinnerArr.indexOf(bingoValuesArr[i]) === -1) {
+    			if(calledList.indexOf(getBingoPiece(bingoValue)) > -1) {
+    				correct++;
+    	    		bingoWinnerArr.push(bingoValuesArr[i]);
+    			}
+    		} else {
+    			speechOutput = "Hey no cheating!  Either say Bingo to try again, or continue to continue the game.";
+    			notEnoughValues = true;
+    			break;
+    		}
+    		
         }
     	
     	if (notEnoughValues){
