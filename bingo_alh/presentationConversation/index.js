@@ -24,8 +24,13 @@ var languageString = {
 				
 				
 				"Introduce": '<say-as interpret-as="interjection">Duh!!</say-as> What does it take to get some ' +
-							 '<say-as interpret-as="spell-out">RESPECT</say-as><break time=".10s"/> around here? <break time=".3s" /> '+
-							 'insert explanation here',
+							 'RESPECT around here? <break time=".3s" /> Any who... Where do I begin? '+
+							 'Im an intelligent personal assistant developed by Amazon, and am capable of multiple things ' +
+							 'such as voice interaction, music playback, making to-do lists, setting alarms, streaming podcasts,'+
+							 'playing audiobooks, and providing weather, traffic, and other real time information, such as news. '+
+							 'I can also control several smart devices for the home.'+
+							 'I really can go on and on about my abilities. Escpecially with the new Echo Look and Echo Show',
+				//That was kind of taken from Wiki :)
 				"Encore"   : '<say-as interpret-as="interjection">Encore!</say-as>',
 				
 				
